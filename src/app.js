@@ -24,7 +24,7 @@ const swaggerDoc = require('./swagger.json')
 //! configuraciones iniciales
 const app = express()
 
-
+initModels()
 
 db.authenticate()
     .then(()=> console.log('database authenticated'))
@@ -32,7 +32,7 @@ db.authenticate()
 db.sync()
     .then(()=> {
         console.log('Database synced')
-        initModels()
+        
     })
     .catch(err => console.log(err))
 app.use(express.json())
