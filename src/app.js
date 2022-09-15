@@ -19,6 +19,7 @@ require('./middleware/auth.middleware')(passport)
 const initModels = require('./models/initModels')
 const swaggerUi = require('swagger-ui-express') 
 const swaggerDoc = require('./swagger.json')
+const PORT = process.env.PORT || 8000
 
  
 //! configuraciones iniciales
@@ -26,12 +27,14 @@ const app = express()
 
 initModels()
 
+
 db.authenticate()
     .then(()=> console.log('database authenticated'))
     .catch(err=> console.log(err))
 db.sync()
     .then(()=> {
         console.log('Database synced')
+        defaulData()
         
     })
     .catch(err => console.log(err))
@@ -63,7 +66,7 @@ app.get('/ejemplo',
 ])
 
 
-app.listen(config.port, () => {
+app.listen(PORT, () => {
     console.log('server started at port 8000')
 })
 
