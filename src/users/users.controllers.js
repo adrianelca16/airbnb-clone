@@ -8,7 +8,7 @@ const Roles = require('../models/roles.model')
 const getAllUsers = async () => {
     const data = await Users.findAll({
         attributes: {
-            exclude: ['password', 'createdAt', "updatedAt"]
+            exclude: ['password', 'createdAt', "updatedAt", "roleId"]
         }
     })
     return data
