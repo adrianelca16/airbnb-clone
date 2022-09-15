@@ -2,6 +2,8 @@ const {DataTypes} = require('sequelize')
 
 const {db} = require('../utils/database')
 
+db
+
 const Roles = db.define('roles', {
     id:{
         type: DataTypes.UUID,
