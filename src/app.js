@@ -34,8 +34,6 @@ db.authenticate()
 db.sync()
     .then(()=> {
         console.log('Database synced')
-        defaulData()
-        
     })
     .catch(err => console.log(err))
 app.use(express.json())

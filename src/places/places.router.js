@@ -5,13 +5,13 @@ const { roleAdminMiddleware } = require('../middleware/role.middleware')
 require('../middleware/auth.middleware')(passport)
 
 router.route('/')
-    .get(placesServices.getAll)
-    .post(placesServices.create)
+    .get(passport.authenticate('jwt', { session: false }), roleAdminMiddleware, placesServices.getAll)
+    .post(passport.authenticate('jwt', { session: false }), roleAdminMiddleware, placesServices.create)
 
 
 
 router.route('/:id')
-    .get(placesServices.getById)
+    .get(passport.authenticate('jwt', { session: false }), roleAdminMiddleware, placesServices.getById)
     .delete(passport.authenticate('jwt', { session: false }), roleAdminMiddleware,placesServices.remove)
     .patch(passport.authenticate('jwt', { session: false }), roleAdminMiddleware, placesServices.editPatch)
     .put(passport.authenticate('jwt', { session: false }), roleAdminMiddleware, placesServices.editPut)

@@ -28,30 +28,62 @@ const postAccomodation = (req, res) => {
     const userId = req.user.id
     const city = req.body.city
     const data = req.body
-    placesControllers.getByCity(city)
-        .then(respon => {
-            console.log(respon.city)
-            accommodationsControllers.createAccommodations(userId, data, respon.id)
-                .then(response => {
-                    res.status(201).json(response)
-                })
-                .catch(err => {
-                    res.status(400).json(err)
-                })
+    if (!Object.keys(data)) {
+        return res.status(400).json({ message: 'Missing data' })
+    } else if (
+        !data.title ||
+        !data.description ||
+        !data.guests ||
+        !data.bathrooms ||
+        !data.rooms ||
+        !data.beds ||
+        !data.price ||
+        !data.commision ||
+        !data.score ||
+        !data.city
+    ) {
+        return res.status(400).json({
+            message: 'All fields must be completed', fields: {
+                "title": 'string',
+                "description": 'string',
+                "guests": 'number',
+                "rooms": 'number',
+                "beds": 'number',
+                "rooms": 'number',
+                "bathrooms": 'decimal',
+                "price": 'float',
+                "score": 'float (cannot be 0 or 0.0)',
+                "commision": 'float',
+                "city": "strings (name of the city)"
+            }, error: data.score
         })
-        .catch(err => err)
+    } else {
+        placesControllers.getByCity(city)
+            .then(respon => {
+                accommodationsControllers.createAccommodations(userId, data, respon.id)
+                    .then(response => {
+                        res.status(201).json(response)
+                    })
+                    .catch(err => {
+                        res.status(400).json(err)
+                    })
+            })
+            .catch(err => err)
+    }
+
 }
 
-const remove =(req, res)=>{
-    const userRol= req.user.rol
-    const id = req.param.id_accommodations
+const remove = (req, res) => {
+    const userRol = req.user.rol
+    const id = req.params.id_accommodations
     accommodationsControllers.removeAccommodations(userRol, id)
-    .then(response => {
-        res.status(204).json(response)
-    })
-    .catch(err => {
-        res.status(400).json(err)
-    })
+        .then(response => {
+            res.status(204).json(response)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(400).json(err)
+        })
 }
 
 const editPatch = (req, res) => {
@@ -63,16 +95,15 @@ const editPatch = (req, res) => {
         return res.status(400).json({ message: 'Missing data' })
     } else if (
         !data.title ||
-        !data.description||
+        !data.description ||
         !data.guests ||
         !data.bathrooms ||
         !data.rooms ||
         !data.beds ||
-        !data.bathrooms ||
         !data.price ||
-        !data.score ||
-        !data.commision 
-        ) {
+        !data.commision ||
+        !data.score
+    ) {
         return res.status(400).json({
             message: 'All fields must be completed', fields: {
                 "title": 'string',
@@ -83,9 +114,9 @@ const editPatch = (req, res) => {
                 "rooms": 'number',
                 "bathrooms": 'decimal',
                 "price": 'float',
-                "score": 'float',
+                "score": 'float (cannot be 0 or 0.0)',
                 "commision": 'float'
-            }
+            }, error: data.score
         })
     } else {
         accommodationsControllers.updateAccommodations(id, data, userRol)
@@ -93,7 +124,7 @@ const editPatch = (req, res) => {
                 return res.status(200).json({ message: 'Accommodations edit succesfully', accommodations: response })
             })
             .catch(err => {
-                res.status(400).json({ message: err.errors[0].message })
+                res.status(400).json({ message: err.message })
             })
     }
 }

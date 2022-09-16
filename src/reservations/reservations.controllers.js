@@ -51,7 +51,7 @@ const getAllReservationsById = async (id) => {
 const canceledReservations = async(id, isCanceled) =>{
     const data = await Reservation.update({
         isCanceled: isCanceled
-    }, {where: id})
+    }, {where:{id}})
     return data
 }
 

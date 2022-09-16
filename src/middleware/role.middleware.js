@@ -10,6 +10,7 @@ const roleAdminMiddleware = async (req, res, next) => {
         if (rol === response.id) {
             next()
         } else {
+           
             return res.status(401).json({ status: 'error', message: 'user not authorized' })
         }
     })).catch(() => { return res.status(401).json({ status: 'error', message: 'user not authorized' }) })
